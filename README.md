@@ -1,3 +1,5 @@
+
+[![Build Status](https://travis-ci.org/blueshen/pica-pica.png?branch=master)](https://travis-ci.org/blueshen/pica-pica)
 ###介绍
 用于对图片进行对比，并标识出不同区域的应用。
 
@@ -5,4 +7,4 @@
 
     mvn tomcat7:run
 
-open <http://localhost:8080/pica-pica/index>
+open <http://localhost:8080/pica-pica/>
