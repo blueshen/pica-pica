@@ -1,12 +1,20 @@
 package cn.shenyanchao.image;
 
-import javax.swing.*;
-import java.io.*;
-import java.awt.*;
-import java.awt.image.*;
-import com.sun.image.codec.jpeg.*;
 
- public class ImageCompare {
+import com.sun.image.codec.jpeg.JPEGCodec;
+import com.sun.image.codec.jpeg.JPEGEncodeParam;
+import com.sun.image.codec.jpeg.JPEGImageDecoder;
+import com.sun.image.codec.jpeg.JPEGImageEncoder;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.Raster;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+public class ImageCompare {
 
 	protected BufferedImage img1 = null;
 	protected BufferedImage img2 = null;
