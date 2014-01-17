@@ -3,3 +3,5 @@ target
 .idea
 src/main/webapp/upload
 logs
+src/test/resources/basecompare
+src/test/resources/tocompare
