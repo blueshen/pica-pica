@@ -1,5 +1,6 @@
 package cn.shenyanchao.image.compare;
 
+import cn.shenyanchao.image.HistogramFilter;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -58,15 +59,15 @@ public class HistogramFilterTest {
         Histogram histogramx = (Histogram) op.getProperty("histogram");
         for (int i = 0; i < histogramx.getBins().length; i++) {
             for (int j = 0; j < histogramx.getBins()[i].length; j++)
-            System.out.println("(" + i + "," + j + ")=" +histogramx.getBins()[i][j]);
+                System.out.println("(" + i + "," + j + ")=" + histogramx.getBins()[i][j]);
         }
 
         BufferedImage imgc = bImage;
         Graphics2D gc = imgc.createGraphics();
         gc.setColor(Color.RED);
         gc.drawRect(50, 50, 50, 50);
-        ImageIO.write(imgc,"jpeg",new FileOutputStream(new File("/home/shenyanchao/git/image-similarity" +
+        ImageIO.write(imgc, "jpeg", new FileOutputStream(new File("/home/shenyanchao/git/image-similarity" +
                 "/src/test/resources/addredchange.jpeg")));
-//        ImageCompare.saveJPG(imgc,"/home/shenyanchao/git/image-similarity/src/test/resources/addredchange.jpeg");
+//        cn.shenyanchao.image.ImageCompare.saveJPG(imgc,"/home/shenyanchao/git/image-similarity/src/test/resources/addredchange.jpeg");
     }
 }
