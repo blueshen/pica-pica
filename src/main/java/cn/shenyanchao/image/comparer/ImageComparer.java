@@ -1,8 +1,10 @@
 package cn.shenyanchao.image.comparer;
 
 import cn.shenyanchao.image.entity.ImageCompareResult;
-
 import javax.imageio.ImageIO;
+import javax.media.jai.Interpolation;
+import javax.media.jai.RenderedOp;
+import javax.media.jai.operator.ScaleDescriptor;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -27,16 +29,18 @@ public class ImageComparer {
     private final double SIMILARITY_THRESHOLD = 0.8;
 
     public boolean compare() {
+        resizeCandidateImage();
         boolean match = true;
-        double similarty = ImageSimilarity.getSimilarty(sourceImage, candidateImage);
-        if (similarty < SIMILARITY_THRESHOLD) {
+        double similarity = ImageSimilarity.getSimilarty(sourceImage, candidateImage);
+        if (similarity < SIMILARITY_THRESHOLD) {
             match = false;
         }
-        System.out.println("相似度：" + similarty);
+        System.out.println("相似度：" + similarity);
         return false;
     }
 
     public ImageCompareResult compareWithBlock() throws IOException {
+        resizeCandidateImage();
         ImageCompareResult result = new ImageCompareResult();
         boolean match = true;
         int width = sourceImage.getWidth();
@@ -117,5 +121,17 @@ public class ImageComparer {
         }
 
         return bi;
+    }
+
+    private  void resizeCandidateImage(){
+        int sourceX = sourceImage.getWidth();
+        int sourceY = sourceImage.getHeight();
+        int candidateX = candidateImage.getWidth();
+        int candidateY = candidateImage.getHeight();
+        float xScale = sourceX/(float)candidateX;
+        float yScale = sourceY/(float)candidateY;
+        RenderedOp renderedOp = ScaleDescriptor.create(candidateImage, new Float(xScale), new Float(yScale),
+                new Float(0.0f), new Float(0.0f), Interpolation.getInstance(Interpolation.INTERP_BICUBIC), null);
+        candidateImage = renderedOp.getAsBufferedImage();
     }
 }

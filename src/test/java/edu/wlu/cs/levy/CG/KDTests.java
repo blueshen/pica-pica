@@ -6,6 +6,7 @@ package edu.wlu.cs.levy.CG;
 */
 import java.util.List;
 
+import cn.shenyanchao.image.algorithm.*;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -133,7 +134,7 @@ public class KDTests {
         try {
             kt.delete(targ);
             Assert.assertFalse(true);
-        } catch (edu.wlu.cs.levy.CG.KeyMissingException e) { 
+        } catch (KeyMissingException e) {
             // supposed to be here
         }
         kt.delete(targ, true);
@@ -151,7 +152,7 @@ public class KDTests {
         try {
             kt.insert(targ, p2);
             Assert.assertFalse(true);
-        } catch (edu.wlu.cs.levy.CG.KeyDuplicateException e) { 
+        } catch (KeyDuplicateException e) {
             // supposed to be here
         }
 

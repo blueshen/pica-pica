@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,22 +26,42 @@ import java.io.InputStream;
  */
 
 @Controller
+@SessionAttributes
 public class ImageController {
 
     private static final Logger LOG = LoggerFactory.getLogger(ImageController.class);
 
-    @RequestMapping(value = "/{jsp}", method = RequestMethod.GET)
-    public String autonavi(@PathVariable String jsp) {
-        return jsp;
+    private static final String DIFF_PATH = "upload";
+
+
+    @RequestMapping(value = "/imagediff", method = RequestMethod.POST)
+    public String imagediff(@RequestParam(required = true) MultipartFile sourceFile,
+                            @RequestParam(required = true) MultipartFile candidateFile,
+                            Model model,HttpServletRequest request
+    )
+            throws IOException {
+        if (sourceFile.isEmpty() || candidateFile.isEmpty()) {
+            //do nothing
+        } else {
+            long beginTime = System.currentTimeMillis();
+            ImageCompareResult result = imagediff(sourceFile, candidateFile,request);
+            long endTime = System.currentTimeMillis();
+            model.addAttribute("result", result);
+            model.addAttribute("durationTime", endTime - beginTime);
+        }
+        return "index";
+
     }
+
 
     @RequestMapping(value = "/api/imagediff", method = RequestMethod.POST)
     @ResponseBody
     public ImageCompareResult imagediff(@RequestParam(required = true) MultipartFile sourceFile,
-                                        @RequestParam(required = true) MultipartFile candidateFile)
+                                        @RequestParam(required = true) MultipartFile candidateFile,
+                                        HttpServletRequest request)
             throws IOException {
-//        String path = request.getSession().getServletContext()
-//                .getRealPath("upload");
+        String path = request.getSession().getServletContext()
+                .getRealPath(DIFF_PATH);
         LOG.info(sourceFile.getContentType());
         LOG.info(candidateFile.getContentType());
         InputStream sourceInputFile = sourceFile.getInputStream();
@@ -52,26 +73,11 @@ public class ImageController {
 
     }
 
-    @RequestMapping(value = "/imagediff", method = RequestMethod.POST)
-    public String imagediff(@RequestParam(required = true) MultipartFile sourceFile,
-                            @RequestParam(required = true) MultipartFile candidateFile, Model model)
-            throws IOException {
-        if (sourceFile.isEmpty() || candidateFile.isEmpty()) {
-            //do nothing
-        } else {
-            long beginTime = System.currentTimeMillis();
-            ImageCompareResult result = imagediff(sourceFile, candidateFile);
-            long endTime = System.currentTimeMillis();
-            model.addAttribute("result", result);
-            model.addAttribute("durationTime",endTime-beginTime);
-        }
-        return "index";
-
-    }
-
-    @RequestMapping(value = "/diffimage/{id}", method = RequestMethod.GET)
-    public HttpEntity<byte[]> getDiffImage(@PathVariable String id) throws IOException {
-        File file = new File("/home/shenyanchao/git/pica-pica/src/test/resources/" + id + ".png");
+    @RequestMapping(value = "/api/diffimage/{id}", method = RequestMethod.GET)
+    public HttpEntity<byte[]> getDiffImage(@PathVariable String id, HttpServletRequest request) throws IOException {
+        String path = request.getSession().getServletContext()
+                .getRealPath(DIFF_PATH);
+        File file = new File(path + id + ".png");
         byte[] body = FileUtils.readFileToByteArray(file);
         HttpHeaders header = new HttpHeaders();
         header.setContentType(MediaType.IMAGE_PNG);

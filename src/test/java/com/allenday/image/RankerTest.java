@@ -5,10 +5,14 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.util.List;
 
+import cn.shenyanchao.image.ImageFeatures;
+import cn.shenyanchao.image.ImageProcessor;
+import cn.shenyanchao.image.Ranker;
+import cn.shenyanchao.image.SearchResult;
 import org.junit.Test;
 
-import edu.wlu.cs.levy.CG.KeyDuplicateException;
-import edu.wlu.cs.levy.CG.KeySizeException;
+import cn.shenyanchao.image.algorithm.KeyDuplicateException;
+import cn.shenyanchao.image.algorithm.KeySizeException;
 
 public class RankerTest {
 	ImageProcessor processor = new ImageProcessor();
