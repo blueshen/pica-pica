@@ -4,7 +4,7 @@ import java.util.*;
 
 // Bjoern Heckel's solution to the KD-Tree n-nearest-neighbor problem
 
-class NearestNeighborList<T> {
+public class NearestNeighborList<T> {
 
     static class NeighborEntry<T> implements Comparable<NeighborEntry<T>> {
         final T data;

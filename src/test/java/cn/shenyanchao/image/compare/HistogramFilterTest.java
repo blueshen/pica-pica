@@ -1,3 +1,5 @@
+package cn.shenyanchao.image.compare;
+
 import org.junit.Before;
 import org.junit.Test;
 

@@ -1,11 +1,11 @@
-package com.allenday.image;
-
-import java.io.File;
-import java.util.List;
+package cn.shenyanchao.image.compare;
 
 import cn.shenyanchao.image.ImageFeatures;
 import cn.shenyanchao.image.ImageProcessor;
 import org.junit.Test;
+
+import java.io.File;
+import java.util.List;
 
 public class ImageProcessorTest {
 	ImageProcessor processor = new ImageProcessor();

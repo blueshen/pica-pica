@@ -1,18 +1,17 @@
-package com.allenday.image;
-
-import static org.junit.Assert.*;
-
-import java.io.File;
-import java.util.List;
+package cn.shenyanchao.image.compare;
 
 import cn.shenyanchao.image.ImageFeatures;
 import cn.shenyanchao.image.ImageProcessor;
 import cn.shenyanchao.image.Ranker;
 import cn.shenyanchao.image.SearchResult;
-import org.junit.Test;
-
 import cn.shenyanchao.image.algorithm.KeyDuplicateException;
 import cn.shenyanchao.image.algorithm.KeySizeException;
+import org.junit.Test;
+
+import java.io.File;
+import java.util.List;
+
+import static org.junit.Assert.fail;
 
 public class RankerTest {
 	ImageProcessor processor = new ImageProcessor();
