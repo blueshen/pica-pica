@@ -1,6 +1,9 @@
 package cn.shenyanchao.image.comparer;
 
 import cn.shenyanchao.image.entity.ImageCompareResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.imageio.ImageIO;
 import javax.media.jai.Interpolation;
 import javax.media.jai.RenderedOp;
@@ -17,6 +20,8 @@ import java.util.UUID;
  */
 public class ImageComparer {
 
+    private static final Logger LOG = LoggerFactory.getLogger(ImageComparer.class);
+
     private BufferedImage sourceImage;
     private BufferedImage candidateImage;
     private BufferedImage changedImage;
@@ -28,6 +33,10 @@ public class ImageComparer {
 
     private final double SIMILARITY_THRESHOLD = 0.8;
 
+    static {
+        System.setProperty("com.sun.media.jai.disableMediaLib", "true");
+    }
+
     public boolean compare() {
         resizeCandidateImage();
         boolean match = true;
@@ -35,7 +44,9 @@ public class ImageComparer {
         if (similarity < SIMILARITY_THRESHOLD) {
             match = false;
         }
-        System.out.println("相似度：" + similarity);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("相似度：{}", similarity);
+        }
         return false;
     }
 
@@ -54,7 +65,9 @@ public class ImageComparer {
                 BufferedImage sourceBlockImage = sourceImage.getSubimage(x, y, eachBlockWidth, eachBlockHeight);
                 BufferedImage candicateBlockImage = candidateImage.getSubimage(x, y, eachBlockWidth, eachBlockHeight);
                 double blockSimilarity = ImageSimilarity.getSimilarty(sourceBlockImage, candicateBlockImage);
-                System.out.println(blockSimilarity);
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug(String.valueOf(blockSimilarity));
+                }
                 if (blockSimilarity < SIMILARITY_THRESHOLD) {
                     paintDiff(changedImage, x, y, eachBlockWidth, eachBlockHeight, blockSimilarity);
                     match = false;
@@ -63,7 +76,7 @@ public class ImageComparer {
         }
         String uuid = UUID.randomUUID().toString();
         ImageIO.write(changedImage, "png", new FileOutputStream(new File("/home/shenyanchao/git/pica-pica" +
-                "/src/main/webapp/upload/"+uuid+".png")));
+                "/src/main/webapp/upload/" + uuid + ".png")));
         result.setMatch(match);
         result.setDiffImageId(uuid);
         return result;
@@ -115,21 +128,21 @@ public class ImageComparer {
             in = new FileInputStream(filename);
             bi = ImageIO.read(in);
         } catch (FileNotFoundException io) {
-            System.out.println("File Not Found");
+            LOG.error("File Not Found");
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error(e.getMessage());
         }
 
         return bi;
     }
 
-    private  void resizeCandidateImage(){
+    private void resizeCandidateImage() {
         int sourceX = sourceImage.getWidth();
         int sourceY = sourceImage.getHeight();
         int candidateX = candidateImage.getWidth();
         int candidateY = candidateImage.getHeight();
-        float xScale = sourceX/(float)candidateX;
-        float yScale = sourceY/(float)candidateY;
+        float xScale = sourceX / (float) candidateX;
+        float yScale = sourceY / (float) candidateY;
         RenderedOp renderedOp = ScaleDescriptor.create(candidateImage, new Float(xScale), new Float(yScale),
                 new Float(0.0f), new Float(0.0f), Interpolation.getInstance(Interpolation.INTERP_BICUBIC), null);
         candidateImage = renderedOp.getAsBufferedImage();

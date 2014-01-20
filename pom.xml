@@ -40,6 +40,11 @@
             <name>Spring Milestone Repository</name>
             <url>http://repo.spring.io/milestone</url>
         </repository>
+        <repository>
+            <id>com.springsource.repository.bundles.external</id>
+            <name>SpringSource Enterprise Bundle Repository - External Bundle Releases</name>
+            <url>http://repository.springsource.com/maven/bundles/external</url>
+        </repository>
     </repositories>
     <dependencyManagement>
         <dependencies>
@@ -53,6 +58,11 @@
         </dependencies>
     </dependencyManagement>
     <dependencies>
+        <dependency>
+            <groupId>javax.media.jai</groupId>
+            <artifactId>com.springsource.javax.media.jai.core</artifactId>
+            <version>1.1.3</version>
+        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -74,27 +84,6 @@
             <groupId>net.coobird</groupId>
             <artifactId>thumbnailator</artifactId>
             <version>[0.4, 0.5)</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.media.jai</groupId>
-            <artifactId>jai_core</artifactId>
-            <version>1.1.3</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/jai_core.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>javax.media.jai</groupId>
-            <artifactId>jai_codec</artifactId>
-            <version>1.1.3</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/jai_codec.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>javax.media.jai</groupId>
-            <artifactId>mlib</artifactId>
-            <version>1.1.3</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/mlibwrapper_jai.jar</systemPath>
         </dependency>
         <!-- Spring -->
         <dependency>
@@ -249,7 +238,7 @@
                 <version>2.1.1</version>
                 <configuration>
                     <warName>pica-pica</warName>
-                    <webResources>
+                   <!-- <webResources>
                         <resource>
                             <directory>lib/</directory>
                             <targetPath>WEB-INF/lib</targetPath>
@@ -257,7 +246,7 @@
                                 <include>**/*.jar</include>
                             </includes>
                         </resource>
-                    </webResources>
+                    </webResources>-->
                 </configuration>
             </plugin>
             <plugin>

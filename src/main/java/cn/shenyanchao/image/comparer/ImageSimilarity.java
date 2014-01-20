@@ -23,7 +23,6 @@ public class ImageSimilarity {
         for (int i = 0; i < sourceData.length; i++) {
             mixedData[i] = Math.sqrt(sourceData[i] * candidateData[i]);
         }
-
         // The values of Bhattacharyya Coefficient ranges from 0 to 1,
         double similarity = 0.0;
         for (int i = 0; i < mixedData.length; i++) {

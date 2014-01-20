@@ -11,7 +11,10 @@ import java.io.IOException;
 public class ImageComparerTest {
 
     private ImageComparer imageComparer;
-
+    static
+    {
+        System.setProperty("com.sun.media.jai.disableMediaLib", "true");
+    }
     @Test
     public void compareTest() throws IOException {
         long beginTime = System.currentTimeMillis();

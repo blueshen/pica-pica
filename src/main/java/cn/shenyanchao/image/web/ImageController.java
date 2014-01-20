@@ -37,14 +37,14 @@ public class ImageController {
     @RequestMapping(value = "/imagediff", method = RequestMethod.POST)
     public String imagediff(@RequestParam(required = true) MultipartFile sourceFile,
                             @RequestParam(required = true) MultipartFile candidateFile,
-                            Model model,HttpServletRequest request
+                            Model model, HttpServletRequest request
     )
             throws IOException {
         if (sourceFile.isEmpty() || candidateFile.isEmpty()) {
             //do nothing
         } else {
             long beginTime = System.currentTimeMillis();
-            ImageCompareResult result = imagediff(sourceFile, candidateFile,request);
+            ImageCompareResult result = imagediff(sourceFile, candidateFile, request);
             long endTime = System.currentTimeMillis();
             model.addAttribute("result", result);
             model.addAttribute("durationTime", endTime - beginTime);
