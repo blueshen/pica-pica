@@ -1,7 +1,7 @@
 package cn.shenyanchao.image.entity;
 
 /**
- * Created by shenyanchao on 14-1-16.
+ * @date 14-1-16.
  * @author  shenyanchao
  */
 public class ImageCompareResult {

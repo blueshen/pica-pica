@@ -1,5 +1,10 @@
 package cn.shenyanchao.image.comparer;
 
+import cn.shenyanchao.image.algorithm.IDistance;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+
 import java.awt.image.BufferedImage;
 
 /**
@@ -7,34 +12,33 @@ import java.awt.image.BufferedImage;
  *
  * @author shenyanchao
  */
+@Component
 public class ImageSimilarity {
 
+    @Qualifier("bhattacharyyaDistance")
+    @Autowired
+    private IDistance distance;
+
+    @Autowired
+    private HistogramFactory histogramFactory;
+
     /**
-     * Bhattacharyya Coefficient
-     * http://www.cse.yorku.ca/~kosta/CompVis_Notes/bhattacharyya.pdf
      *
      * @return
      */
-    public static double getSimilarty(BufferedImage sourceImage, BufferedImage candidateImage) {
-        HistogramFactory hFactory = new HistogramFactory();
-        double[] sourceData = hFactory.getHistogram(sourceImage);
-        double[] candidateData = hFactory.getHistogram(candidateImage);
-        double[] mixedData = new double[sourceData.length];
-        for (int i = 0; i < sourceData.length; i++) {
-            mixedData[i] = Math.sqrt(sourceData[i] * candidateData[i]);
-        }
-        // The values of Bhattacharyya Coefficient ranges from 0 to 1,
-        double similarity = 0.0;
-        for (int i = 0; i < mixedData.length; i++) {
-            similarity += mixedData[i];
-        }
+    public  double getSimilarty(BufferedImage sourceImage, BufferedImage candidateImage) {
+
+        double[] sourceData = histogramFactory.getHistogram(sourceImage);
+        double[] candidateData = histogramFactory.getHistogram(candidateImage);
+
+        double similarity = distance.distance(sourceData,candidateData);
 
         // The degree of similarity
-//        if (similarity > 1) {
-//            similarity = 1.0;
-//        } else if (similarity < 0.0) {
-//            similarity = 0.0;
-//        }
+        if (similarity > 1.0) {
+            similarity = 1.0;
+        } else if (similarity < 0.0) {
+            similarity = 0.0;
+        }
         return similarity;
     }
 }

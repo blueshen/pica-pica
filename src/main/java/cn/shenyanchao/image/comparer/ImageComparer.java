@@ -3,6 +3,8 @@ package cn.shenyanchao.image.comparer;
 import cn.shenyanchao.image.entity.ImageCompareResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
 import javax.media.jai.Interpolation;
@@ -14,33 +16,85 @@ import java.io.*;
 import java.util.UUID;
 
 /**
- * Created by shenyanchao on 14-1-15.
- *
  * @author shenyanchao
+ * @date 14-1-15.
  */
+
+@Service
 public class ImageComparer {
 
     private static final Logger LOG = LoggerFactory.getLogger(ImageComparer.class);
-
-    private BufferedImage sourceImage;
-    private BufferedImage candidateImage;
-    private BufferedImage changedImage;
-    private final int COL = 20;
-    private final int ROW = 20;
-
-    int eachBlockWidth = 0;
-    int eachBlockHeight = 0;
-
-    private final double SIMILARITY_THRESHOLD = 0.8;
+    private static final int COL = 20;
+    private static final int ROW = 20;
+    private static final double SIMILARITY_THRESHOLD = 0.8;
 
     static {
         System.setProperty("com.sun.media.jai.disableMediaLib", "true");
     }
 
+    @Autowired
+    private ImageSimilarity imageSimilarity;
+    private BufferedImage sourceImage;
+    private BufferedImage candidateImage;
+    private BufferedImage changedImage;
+    private int eachBlockWidth = 0;
+    private int eachBlockHeight = 0;
+
+    public ImageComparer() {
+    }
+
+    // constructor 1. use filenames
+    public ImageComparer(String file1, String file2) {
+        this(loadJPG(file1), loadJPG(file2));
+    }
+
+    // constructor 2. use awt images.
+    public ImageComparer(Image img1, Image img2) {
+        this(imageToBufferedImage(img1), imageToBufferedImage(img2));
+    }
+
+    // constructor 3. use buffered images. all roads lead to the same place. this place.
+    public ImageComparer(BufferedImage sourceImage, BufferedImage candidateImage) {
+        this.sourceImage = sourceImage;
+        this.candidateImage = candidateImage;
+    }
+
+    // buffered images are just better.
+    private static BufferedImage imageToBufferedImage(Image img) {
+        BufferedImage bi = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_RGB);
+        Graphics2D g2 = bi.createGraphics();
+        g2.drawImage(img, null, null);
+        return bi;
+    }
+
+    // read a jpeg file into a buffered image
+    protected static Image loadJPG(String filename) {
+        FileInputStream in = null;
+        BufferedImage bi = null;
+        try {
+            in = new FileInputStream(filename);
+            bi = ImageIO.read(in);
+        } catch (FileNotFoundException io) {
+            LOG.error("File Not Found");
+        } catch (IOException e) {
+            LOG.error(e.getMessage());
+        }
+
+        return bi;
+    }
+
+    public void setSourceImage(BufferedImage sourceImage) {
+        this.sourceImage = sourceImage;
+    }
+
+    public void setCandidateImage(BufferedImage candidateImage) {
+        this.candidateImage = candidateImage;
+    }
+
     public boolean compare() {
         resizeCandidateImage();
         boolean match = true;
-        double similarity = ImageSimilarity.getSimilarty(sourceImage, candidateImage);
+        double similarity = imageSimilarity.getSimilarty(sourceImage, candidateImage);
         if (similarity < SIMILARITY_THRESHOLD) {
             match = false;
         }
@@ -64,7 +118,7 @@ public class ImageComparer {
             for (int y = 0; y + eachBlockHeight <= height; y += eachBlockHeight) {
                 BufferedImage sourceBlockImage = sourceImage.getSubimage(x, y, eachBlockWidth, eachBlockHeight);
                 BufferedImage candicateBlockImage = candidateImage.getSubimage(x, y, eachBlockWidth, eachBlockHeight);
-                double blockSimilarity = ImageSimilarity.getSimilarty(sourceBlockImage, candicateBlockImage);
+                double blockSimilarity = imageSimilarity.getSimilarty(sourceBlockImage, candicateBlockImage);
                 if (LOG.isDebugEnabled()) {
                     LOG.debug(String.valueOf(blockSimilarity));
                 }
@@ -92,48 +146,8 @@ public class ImageComparer {
         gc.drawString(similarityStr, x + eachBlockWidth / 2, y + eachBlockHeight / 2);
     }
 
-    // constructor 1. use filenames
-    public ImageComparer(String file1, String file2) {
-        this(loadJPG(file1), loadJPG(file2));
-    }
-
-    // constructor 2. use awt images.
-    public ImageComparer(Image img1, Image img2) {
-        this(imageToBufferedImage(img1), imageToBufferedImage(img2));
-    }
-
-    // constructor 3. use buffered images. all roads lead to the same place. this place.
-    public ImageComparer(BufferedImage sourceImage, BufferedImage candidateImage) {
-        this.sourceImage = sourceImage;
-        this.candidateImage = candidateImage;
-    }
-
-    // buffered images are just better.
-    private static BufferedImage imageToBufferedImage(Image img) {
-        BufferedImage bi = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_RGB);
-        Graphics2D g2 = bi.createGraphics();
-        g2.drawImage(img, null, null);
-        return bi;
-    }
-
     public BufferedImage getChangedImage() {
         return changedImage;
-    }
-
-    // read a jpeg file into a buffered image
-    protected static Image loadJPG(String filename) {
-        FileInputStream in = null;
-        BufferedImage bi = null;
-        try {
-            in = new FileInputStream(filename);
-            bi = ImageIO.read(in);
-        } catch (FileNotFoundException io) {
-            LOG.error("File Not Found");
-        } catch (IOException e) {
-            LOG.error(e.getMessage());
-        }
-
-        return bi;
     }
 
     private void resizeCandidateImage() {

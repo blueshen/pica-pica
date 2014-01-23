@@ -1,24 +1,26 @@
-// Hamming distance metric class
-
 package cn.shenyanchao.image.algorithm;
 
-class EuclideanDistance extends DistanceMetric {
-    
-    protected double distance(double [] a, double [] b)  {
-	
-	return Math.sqrt(sqrdist(a, b));
-	
+import org.springframework.stereotype.Component;
+
+@Component
+public class EuclideanDistance implements IDistance {
+    public double distance(double[] a, double[] b) {
+
+        return Math.sqrt(sqrdist(a, b));
+
     }
-    
-    protected static double sqrdist(double [] a, double [] b) {
 
-	double dist = 0;
+    private double sqrdist(double[] a, double[] b) {
 
-	for (int i=0; i<a.length; ++i) {
-	    double diff = (a[i] - b[i]);
-	    dist += diff*diff;
-	}
+        double dist = 0;
 
-	return dist;
-    }     
+        for (int i = 0; i < a.length; ++i) {
+            double diff = (a[i] - b[i]);
+            dist += diff * diff;
+        }
+
+        return dist;
+    }
+
+
 }

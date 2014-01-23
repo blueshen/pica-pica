@@ -5,6 +5,7 @@ import cn.shenyanchao.image.entity.ImageCompareResult;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -20,7 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Created by shenyanchao on 14-1-15.
+ * @date  14-1-15.
  *
  * @author shenyanchao
  */
@@ -30,9 +31,9 @@ import java.io.InputStream;
 public class ImageController {
 
     private static final Logger LOG = LoggerFactory.getLogger(ImageController.class);
-
     private static final String DIFF_PATH = "upload";
-
+    @Autowired
+    private ImageComparer imageComparer;
 
     @RequestMapping(value = "/imagediff", method = RequestMethod.POST)
     public String imagediff(@RequestParam(required = true) MultipartFile sourceFile,
@@ -53,7 +54,6 @@ public class ImageController {
 
     }
 
-
     @RequestMapping(value = "/api/imagediff", method = RequestMethod.POST)
     @ResponseBody
     public ImageCompareResult imagediff(@RequestParam(required = true) MultipartFile sourceFile,
@@ -66,8 +66,8 @@ public class ImageController {
         LOG.info(candidateFile.getContentType());
         InputStream sourceInputFile = sourceFile.getInputStream();
         InputStream candidateInputFile = candidateFile.getInputStream();
-        ImageComparer imageComparer = new ImageComparer(ImageIO.read(sourceInputFile),
-                ImageIO.read(candidateInputFile));
+        imageComparer.setSourceImage(ImageIO.read(sourceInputFile));
+        imageComparer.setCandidateImage(ImageIO.read(candidateInputFile));
         ImageCompareResult result = imageComparer.compareWithBlock();
         return result;
 

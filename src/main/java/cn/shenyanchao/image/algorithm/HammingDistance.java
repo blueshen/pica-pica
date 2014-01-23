@@ -1,18 +1,21 @@
-// Hamming distance metric class
-
 package cn.shenyanchao.image.algorithm;
 
-class HammingDistance extends DistanceMetric {
-    
-    protected double distance(double [] a, double [] b)  {
+import org.springframework.stereotype.Component;
 
-	double dist = 0;
+/**
+ * 汉明距离
+ */
+@Component
+public class HammingDistance implements IDistance {
 
-	for (int i=0; i<a.length; ++i) {
-	    double diff = (a[i] - b[i]);
-	    dist += Math.abs(diff);
-	}
+    public double distance(double[] a, double[] b) {
 
-	return dist;
-    }     
+        double dist = 0;
+
+        for (int i = 0; i < a.length; ++i) {
+            double diff = (a[i] - b[i]);
+            dist += Math.abs(diff);
+        }
+        return dist;
+    }
 }
