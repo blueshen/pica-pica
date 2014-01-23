@@ -8,3 +8,11 @@
     mvn tomcat7:run
 
 open <http://localhost:8080/pica-pica/>
+
+
+
+###Thanks:
+
+<http://www.lac.inpe.br/JIPCookbook/>
+
+<http://blog.csdn.net/jia20003/article/details/7771651>
