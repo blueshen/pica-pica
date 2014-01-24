@@ -1,6 +1,7 @@
 package cn.shenyanchao.image.comparer;
 
 import cn.shenyanchao.image.entity.ImageCompareResult;
+import cn.shenyanchao.image.entity.ImageForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +25,9 @@ import java.util.UUID;
 public class ImageComparer {
 
     private static final Logger LOG = LoggerFactory.getLogger(ImageComparer.class);
-    private static final int COL = 20;
-    private static final int ROW = 20;
-    private static final double SIMILARITY_THRESHOLD = 0.8;
+    private int splitRow;
+    private int splitCol;
+    private double similarityThreshold; //just experience
 
     static {
         System.setProperty("com.sun.media.jai.disableMediaLib", "true");
@@ -42,6 +43,7 @@ public class ImageComparer {
 
     public ImageComparer() {
     }
+
 
     // constructor 1. use filenames
     public ImageComparer(String file1, String file2) {
@@ -83,6 +85,25 @@ public class ImageComparer {
         return bi;
     }
 
+    public void populateConfig(ImageForm imageForm) {
+        this.splitRow = imageForm.getRow();
+        this.splitCol = imageForm.getCol();
+        this.similarityThreshold = imageForm.getSimilarityThreshold();
+
+    }
+
+    public void setSplitRow(int splitRow) {
+        this.splitRow = splitRow;
+    }
+
+    public void setSplitCol(int splitCol) {
+        this.splitCol = splitCol;
+    }
+
+    public void setSimilarityThreshold(double similarityThreshold) {
+        this.similarityThreshold = similarityThreshold;
+    }
+
     public void setSourceImage(BufferedImage sourceImage) {
         this.sourceImage = sourceImage;
     }
@@ -95,7 +116,7 @@ public class ImageComparer {
         resizeCandidateImage();
         boolean match = true;
         double similarity = imageSimilarity.getSimilarty(sourceImage, candidateImage);
-        if (similarity < SIMILARITY_THRESHOLD) {
+        if (similarity < similarityThreshold) {
             match = false;
         }
         if (LOG.isDebugEnabled()) {
@@ -112,8 +133,8 @@ public class ImageComparer {
         int height = sourceImage.getHeight();
         changedImage = candidateImage;
 
-        eachBlockWidth = width / COL;
-        eachBlockHeight = height / ROW;
+        eachBlockWidth = width / splitCol;
+        eachBlockHeight = height / splitRow;
         for (int x = 0; x + eachBlockWidth <= width; x += eachBlockWidth) {
             for (int y = 0; y + eachBlockHeight <= height; y += eachBlockHeight) {
                 BufferedImage sourceBlockImage = sourceImage.getSubimage(x, y, eachBlockWidth, eachBlockHeight);
@@ -122,7 +143,7 @@ public class ImageComparer {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug(String.valueOf(blockSimilarity));
                 }
-                if (blockSimilarity < SIMILARITY_THRESHOLD) {
+                if (blockSimilarity < similarityThreshold) {
                     paintDiff(changedImage, x, y, eachBlockWidth, eachBlockHeight, blockSimilarity);
                     match = false;
                 }

@@ -2,6 +2,7 @@ package cn.shenyanchao.image.web;
 
 import cn.shenyanchao.image.comparer.ImageComparer;
 import cn.shenyanchao.image.entity.ImageCompareResult;
+import cn.shenyanchao.image.entity.ImageForm;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,9 +22,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * @date  14-1-15.
- *
  * @author shenyanchao
+ * @date 14-1-15.
  */
 
 @Controller
@@ -36,19 +36,20 @@ public class ImageController {
     private ImageComparer imageComparer;
 
     @RequestMapping(value = "/imagediff", method = RequestMethod.POST)
-    public String imagediff(@RequestParam(required = true) MultipartFile sourceFile,
-                            @RequestParam(required = true) MultipartFile candidateFile,
-                            Model model, HttpServletRequest request
+    public String imagediff(@ModelAttribute("imageForm") ImageForm imageForm, Model model, HttpServletRequest request
     )
             throws IOException {
+        MultipartFile sourceFile = imageForm.getSourceFile();
+        MultipartFile candidateFile = imageForm.getCandidateFile();
         if (sourceFile.isEmpty() || candidateFile.isEmpty()) {
             //do nothing
         } else {
             long beginTime = System.currentTimeMillis();
-            ImageCompareResult result = imagediff(sourceFile, candidateFile, request);
+            ImageCompareResult result = imagediff(imageForm, request);
             long endTime = System.currentTimeMillis();
             model.addAttribute("result", result);
             model.addAttribute("durationTime", endTime - beginTime);
+            model.addAttribute("imageForm",imageForm);
         }
         return "index";
 
@@ -56,18 +57,19 @@ public class ImageController {
 
     @RequestMapping(value = "/api/imagediff", method = RequestMethod.POST)
     @ResponseBody
-    public ImageCompareResult imagediff(@RequestParam(required = true) MultipartFile sourceFile,
-                                        @RequestParam(required = true) MultipartFile candidateFile,
-                                        HttpServletRequest request)
+    public ImageCompareResult imagediff(@ModelAttribute("imageForm") ImageForm imageForm,HttpServletRequest request)
             throws IOException {
         String path = request.getSession().getServletContext()
                 .getRealPath(DIFF_PATH);
+        MultipartFile sourceFile = imageForm.getSourceFile();
+        MultipartFile candidateFile = imageForm.getCandidateFile();
         LOG.info(sourceFile.getContentType());
         LOG.info(candidateFile.getContentType());
         InputStream sourceInputFile = sourceFile.getInputStream();
         InputStream candidateInputFile = candidateFile.getInputStream();
         imageComparer.setSourceImage(ImageIO.read(sourceInputFile));
         imageComparer.setCandidateImage(ImageIO.read(candidateInputFile));
+        imageComparer.populateConfig(imageForm);
         ImageCompareResult result = imageComparer.compareWithBlock();
         return result;
 

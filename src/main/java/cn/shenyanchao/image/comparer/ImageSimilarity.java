@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import java.awt.image.BufferedImage;
 
 /**
- * Created by shenyanchao on 14-1-15.
+ * @date 14-1-15.
  *
  * @author shenyanchao
  */
