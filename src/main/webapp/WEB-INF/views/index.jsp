@@ -17,7 +17,7 @@
             <h2>Pica Pica - Image Compare</h2>
         </div>
         <div class="row">
-            <form class="form-horizontal" action="${ctx}/imagediff" method="post"
+            <form class="form-horizontal" action="${ctx}/image/compare" method="post"
                   enctype="multipart/form-data">
                 <div class="row">
                     <div class="col-md-6">

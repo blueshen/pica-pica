@@ -21,6 +21,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+
 /**
  * @author shenyanchao
  * @date 14-1-15.
@@ -35,29 +38,27 @@ public class ImageController {
     @Autowired
     private ImageComparer imageComparer;
 
-    @RequestMapping(value = "/imagediff", method = RequestMethod.POST)
+    @RequestMapping(value = "/image/compare", method = RequestMethod.POST)
     public String imagediff(@ModelAttribute("imageForm") ImageForm imageForm, Model model, HttpServletRequest request
     )
             throws IOException {
         MultipartFile sourceFile = imageForm.getSourceFile();
         MultipartFile candidateFile = imageForm.getCandidateFile();
-        if (sourceFile.isEmpty() || candidateFile.isEmpty()) {
-            //do nothing
-        } else {
+        if (!sourceFile.isEmpty() && !candidateFile.isEmpty()) {
             long beginTime = System.currentTimeMillis();
             ImageCompareResult result = imagediff(imageForm, request);
             long endTime = System.currentTimeMillis();
             model.addAttribute("result", result);
             model.addAttribute("durationTime", endTime - beginTime);
-            model.addAttribute("imageForm",imageForm);
+            model.addAttribute("imageForm", imageForm);
         }
         return "index";
 
     }
 
-    @RequestMapping(value = "/api/imagediff", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/image/compare", method = RequestMethod.POST)
     @ResponseBody
-    public ImageCompareResult imagediff(@ModelAttribute("imageForm") ImageForm imageForm,HttpServletRequest request)
+    public ImageCompareResult imagediff(@ModelAttribute("imageForm") ImageForm imageForm, HttpServletRequest request)
             throws IOException {
         String path = request.getSession().getServletContext()
                 .getRealPath(DIFF_PATH);
@@ -71,11 +72,12 @@ public class ImageController {
         imageComparer.setCandidateImage(ImageIO.read(candidateInputFile));
         imageComparer.populateConfig(imageForm);
         ImageCompareResult result = imageComparer.compareWithBlock();
+//        result.add(linkTo("upload").withSelfRel());
         return result;
 
     }
 
-    @RequestMapping(value = "/api/diffimage/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/image/{id}", method = RequestMethod.GET)
     public HttpEntity<byte[]> getDiffImage(@PathVariable String id, HttpServletRequest request) throws IOException {
         String path = request.getSession().getServletContext()
                 .getRealPath(DIFF_PATH);

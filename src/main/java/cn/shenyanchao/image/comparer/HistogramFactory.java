@@ -77,25 +77,6 @@ public class HistogramFactory {
         return histogramx;
     }
 
-    //RGB三维降到一维数组
-    public int[] threeDimension2OneDimension(Histogram histogram) {
-
-        int[] histogramData = new int[RED_CHANNEL * GREEN_CHANNEL * BLUE_CHANNEL];
-        int bands = histogram.getNumBands();
-        if (bands < 2) {
-            LOG.error("not a rgb histogram");
-        }
-        int[] redBins = histogram.getBins(0);
-        int[] greenBins = histogram.getBins(1);
-        int[] blueBins = histogram.getBins(2);
-
-        for (int i = 0; i < 256; i++) {
-
-        }
-
-        return histogramData;
-
-    }
 
     private int getIndex(int redIndex, int greenIndex, int blueIndex) {
         return redIndex + greenIndex * RED_CHANNEL + blueIndex * RED_CHANNEL * GREEN_CHANNEL;

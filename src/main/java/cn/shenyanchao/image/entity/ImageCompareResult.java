@@ -1,10 +1,12 @@
 package cn.shenyanchao.image.entity;
 
+import org.springframework.hateoas.ResourceSupport;
+
 /**
  * @date 14-1-16.
  * @author  shenyanchao
  */
-public class ImageCompareResult {
+public class ImageCompareResult extends ResourceSupport {
 
     private boolean match;
 
