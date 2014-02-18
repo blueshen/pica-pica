@@ -84,7 +84,7 @@ public class HistogramFactory {
 
     public void printBand(int band, int[] bins) {
         for (int i = 0; i < bins.length; i++) {
-            System.out.println("(" + band + "," + i + ")=" + bins[i]);
+            LOG.info("(" + band + "," + i + ")=" + bins[i]);
         }
     }
 

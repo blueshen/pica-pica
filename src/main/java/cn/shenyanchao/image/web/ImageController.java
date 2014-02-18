@@ -58,7 +58,7 @@ public class ImageController {
 
     @RequestMapping(value = "/api/image/compare", method = RequestMethod.POST)
     @ResponseBody
-    public ImageCompareResult imagediff(@ModelAttribute("imageForm") ImageForm imageForm, HttpServletRequest request)
+    public ImageCompareResult imagediff(ImageForm imageForm, HttpServletRequest request)
             throws IOException {
         String path = request.getSession().getServletContext()
                 .getRealPath(DIFF_PATH);
