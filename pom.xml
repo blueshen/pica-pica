@@ -1,8 +1,4 @@
-<project
-        xmlns="http://maven.apache.org/POM/4.0.0"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
-        >
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>cn.shenyanchao.image</groupId>
     <artifactId>pica-pica</artifactId>
@@ -46,6 +42,12 @@
             <url>http://repository.springsource.com/maven/bundles/external</url>
         </repository>
     </repositories>
+
+    <scm>
+        <connection>scm:git:git@github.com/blueshen/pica-pica.git</connection>
+        <developerConnection>scm:git:git@github.com:blueshen/pica-pica.git</developerConnection>
+        <url>git@github.com:blueshen/pica-pica.git</url>
+    </scm>
     <dependencyManagement>
         <dependencies>
             <dependency>
