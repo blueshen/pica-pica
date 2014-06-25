@@ -70,7 +70,7 @@ public class ImageController {
         InputStream candidateInputFile = candidateFile.getInputStream();
         imageComparer.setSourceImage(ImageIO.read(sourceInputFile));
         imageComparer.setCandidateImage(ImageIO.read(candidateInputFile));
-        imageComparer.populateConfig(imageForm);
+        imageComparer.populateConfig(imageForm,path);
         ImageCompareResult result = imageComparer.compareWithBlock();
 //        result.add(linkTo("upload").withSelfRel());
         return result;

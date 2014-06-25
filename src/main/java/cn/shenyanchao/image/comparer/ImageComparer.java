@@ -41,6 +41,8 @@ public class ImageComparer {
     private int eachBlockWidth = 0;
     private int eachBlockHeight = 0;
 
+    private String path;
+
     public ImageComparer() {
     }
 
@@ -85,10 +87,11 @@ public class ImageComparer {
         return bi;
     }
 
-    public void populateConfig(ImageForm imageForm) {
+    public void populateConfig(ImageForm imageForm,String path) {
         this.splitRow = imageForm.getRow();
         this.splitCol = imageForm.getCol();
         this.similarityThreshold = imageForm.getSimilarityThreshold();
+        this.path = path;
 
     }
 
@@ -150,8 +153,7 @@ public class ImageComparer {
             }
         }
         String uuid = UUID.randomUUID().toString();
-        ImageIO.write(changedImage, "png", new FileOutputStream(new File("/home/shenyanchao/git/pica-pica" +
-                "/src/main/webapp/upload/" + uuid + ".png")));
+        ImageIO.write(changedImage, "png", new FileOutputStream(new File(path +File.separator+ uuid + ".png")));
         result.setMatch(match);
         result.setDiffImageId(uuid);
         return result;
