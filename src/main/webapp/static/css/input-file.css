@@ -12,7 +12,7 @@
     text-align: right;
     filter: alpha(opacity=0);
     opacity: 0;
-    background: red;
+    background: #ff0000;
     cursor: inherit;
     display: block;
 }

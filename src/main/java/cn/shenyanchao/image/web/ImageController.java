@@ -72,7 +72,6 @@ public class ImageController {
         imageComparer.setCandidateImage(ImageIO.read(candidateInputFile));
         imageComparer.populateConfig(imageForm,path);
         ImageCompareResult result = imageComparer.compareWithBlock();
-//        result.add(linkTo("upload").withSelfRel());
         return result;
 
     }
