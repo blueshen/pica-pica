@@ -82,6 +82,7 @@
 
                     <p>耗时:${durationTime}ms</p>
                 </div>
+                <%--<a href="${ctx}/api/image/${result.diffImageId}">查看</a>--%>
                 <img src="${ctx}/upload/${result.diffImageId}.png" class="img-thumbnail">
             </c:if>
             <c:if test="${result.match=='true'}">

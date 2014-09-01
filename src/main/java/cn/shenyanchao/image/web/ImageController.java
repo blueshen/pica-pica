@@ -21,9 +21,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
-
 /**
  * @author shenyanchao
  * @date 14-1-15.
@@ -34,14 +31,14 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 public class ImageController {
 
     private static final Logger LOG = LoggerFactory.getLogger(ImageController.class);
-    private static final String DIFF_PATH = "upload";
+
+    private static final String DIFF_PATH = "/upload";
     @Autowired
     private ImageComparer imageComparer;
 
     @RequestMapping(value = "/image/compare", method = RequestMethod.POST)
     public String imagediff(@ModelAttribute("imageForm") ImageForm imageForm, Model model, HttpServletRequest request
-    )
-            throws IOException {
+    )throws IOException {
         MultipartFile sourceFile = imageForm.getSourceFile();
         MultipartFile candidateFile = imageForm.getCandidateFile();
         if (!sourceFile.isEmpty() && !candidateFile.isEmpty()) {
@@ -70,7 +67,7 @@ public class ImageController {
         InputStream candidateInputFile = candidateFile.getInputStream();
         imageComparer.setSourceImage(ImageIO.read(sourceInputFile));
         imageComparer.setCandidateImage(ImageIO.read(candidateInputFile));
-        imageComparer.populateConfig(imageForm,path);
+        imageComparer.populateConfig(imageForm, path);
         ImageCompareResult result = imageComparer.compareWithBlock();
         return result;
 
@@ -80,7 +77,7 @@ public class ImageController {
     public HttpEntity<byte[]> getDiffImage(@PathVariable String id, HttpServletRequest request) throws IOException {
         String path = request.getSession().getServletContext()
                 .getRealPath(DIFF_PATH);
-        File file = new File(path + id + ".png");
+        File file = new File(path +File.separator + id + ".png");
         byte[] body = FileUtils.readFileToByteArray(file);
         HttpHeaders header = new HttpHeaders();
         header.setContentType(MediaType.IMAGE_PNG);
