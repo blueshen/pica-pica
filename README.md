@@ -81,7 +81,3 @@ open <http://localhost:8080/pica-pica/>
   
   或者可以直接在浏览器查看<http://localhost:8080/pica-pica/upload/d38719d1-3246-4e96-b444-6d7310156fad.png>
 
-
-####线上使用
-
-访问<http://picapica.jd-app.com/>
