@@ -1,9 +1,10 @@
 
 [![Build Status](https://travis-ci.org/blueshen/pica-pica.png?branch=master)](https://travis-ci.org/blueshen/pica-pica)
-###介绍
+
+### 介绍
 用于对图片进行对比，并标识出不同区域的应用。
 
-###Usage
+### Usage
 
     mvn tomcat7:run
 
@@ -11,14 +12,14 @@ open <http://localhost:8080/pica-pica/>
 
 
 
-###Thanks:
+### Thanks:
 
 <http://www.lac.inpe.br/JIPCookbook/>
 
 <http://blog.csdn.net/jia20003/article/details/7771651>
 
 
-###开放的API接口
+### 开放的API接口
 
 - `/api/image/compare`    
        **http请求方式**：POST[multipart/form-data]
@@ -70,7 +71,7 @@ open <http://localhost:8080/pica-pica/>
     **http请求方式**：GET
     参数：id 上面返回的diffImageId值
     
-####如何调用？
+#### 如何调用？
     
         InputStream is =
                 new URL("http://localhost:8080/pica-pica/api/image/d38719d1-3246-4e96-b444-6d7310156fad").openStream();
