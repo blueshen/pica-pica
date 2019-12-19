@@ -1,6 +1,6 @@
 
 [![Build Status](https://travis-ci.org/blueshen/pica-pica.png?branch=master)](https://travis-ci.org/blueshen/pica-pica)
-
+# pica pica (Magpie)
 ### 介绍
 用于对图片进行对比，并标识出不同区域的应用。
 
@@ -21,8 +21,8 @@ open <http://localhost:8080/pica-pica/>
 
 ### 开放的API接口
 
-- `/api/image/compare`    
-       **http请求方式**：POST[multipart/form-data]
+#### 1.`/api/image/compare`    
+  **http请求方式**：POST[multipart/form-data]
 
        **form参数：**   
        sourceFile  源图片   
@@ -31,12 +31,13 @@ open <http://localhost:8080/pica-pica/>
        row 图片切分为几行
        similarityThreshold 阈值，低于这个相似度认为图片是不同的
        
-       返回JSON：
+返回JSON：
        
        {"match":true,"diffImageId":"038d245a-ae22-460d-b123-66dd11fcdaf5","links":[]}
        
-####如何调用?
-1.使用Spring RestTemplate
+##### 如何调用?   
+
+- 使用Spring RestTemplate
      
         long beginTime = System.currentTimeMillis();
         RestTemplate template = new RestTemplate();
@@ -51,7 +52,8 @@ open <http://localhost:8080/pica-pica/>
         long endTime = System.currentTimeMillis();
         System.out.println(result);
         System.out.println("耗时(ms):" + (endTime - beginTime));
-2.使用httpclient
+        
+- 使用httpclient
     
         HttpClient client = new DefaultHttpClient();
         HttpPost post = new HttpPost("http://localhost:8080/pica-pica/api/image/compare");
@@ -67,11 +69,11 @@ open <http://localhost:8080/pica-pica/>
         client.getConnectionManager().shutdown();
         System.out.println(returnStr);
         
--  `/api/image/${id}`
+#### 2. `/api/image/${id}`
     **http请求方式**：GET
     参数：id 上面返回的diffImageId值
     
-#### 如何调用？
+##### 如何调用？
     
         InputStream is =
                 new URL("http://localhost:8080/pica-pica/api/image/d38719d1-3246-4e96-b444-6d7310156fad").openStream();
@@ -80,5 +82,6 @@ open <http://localhost:8080/pica-pica/>
         out.close();
         is.close();
   
-  或者可以直接在浏览器查看<http://localhost:8080/pica-pica/upload/d38719d1-3246-4e96-b444-6d7310156fad.png>
+
+或者可以直接在浏览器查看<http://localhost:8080/pica-pica/upload/d38719d1-3246-4e96-b444-6d7310156fad.png>
 
